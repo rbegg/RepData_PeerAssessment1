@@ -6,7 +6,10 @@ output:
 ---
 
 
+
 ## Loading and preprocessing the data
+The source data was downloaded from https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip
+
 ```{r, echo=TRUE}
 
 library(ggplot2)
@@ -27,10 +30,12 @@ hist(DailySteps$steps,
      breaks = 20,
      main="Frequency of Daily Steps",
      xlab = "Daily Steps")
-
+```
+The Mean and Median of daily steps taken
+```{r, echo=TRUE}
 #mean and medium values
-mean(DailySteps$steps)
-median(DailySteps$steps)
+output <- data.frame( Mean = mean(DailySteps$steps), Median = median(DailySteps$steps))
+output
 ```
 
 
@@ -47,13 +52,16 @@ plot(IncrementAvg$interval,
      xlab = "5-minute Interval",
      ylab = "# of Steps Taken"
      )
-
+```
+The interval with the maxium number of average steps across all days:
+```{r, echo=TRUE}
 IncrementAvg[IncrementAvg$steps==max(IncrementAvg$steps),]$interval
 ```
 
 
 
 ## Imputing missing values
+The avg number of steps per interval over all days is used to impute the missing data.
 ```{r, echo=TRUE}
 # Logical vector of missing values
 Missing = is.na(ActivityData$steps)
@@ -69,16 +77,24 @@ ActivityData2$steps[Missing] <-
         sapply(ActivityData2$interval[Missing],
                function(x) { IncrementAvg$steps[IncrementAvg$interval==x] }
                )
+
+# Aggregate the data with the imputed data.
 DailySteps2 <- aggregate(steps ~ date, ActivityData2, sum)
 
+#plot histogram of Total number of steps per day of data with missing values imputed
 hist(DailySteps2$steps, 
      length(DailySteps2$date),
      breaks = 20,
      main="Frequency of Daily Steps",
      xlab = "Daily Steps")
+```
+The histogram has a similar shape as the original data, overall the frequencies are higher.
 
-mean(DailySteps2$steps)
-median(DailySteps2$steps)
+The Mean and Medium of daily steps with imputed missing data.
+```{r, echo=TRUE}
+#Mean and Median
+output2 <- data.frame( Mean = mean(DailySteps2$steps), Median = median(DailySteps2$steps))
+output2
 ```
 
 
@@ -104,4 +120,4 @@ g = ggplot(IncrementAvg2, aes(interval,steps)) +
              y="Interval")
 g
 ```
-
+The weekdays and weekend days have a similar shape.  The weekday steps start earlier in the day, the number of steps tends to be higher on weekends.
