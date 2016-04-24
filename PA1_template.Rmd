@@ -7,19 +7,101 @@ output:
 
 
 ## Loading and preprocessing the data
+```{r, echo=TRUE}
 
+library(ggplot2)
+# Load the Data from original data file
+ActivityData <- read.csv("activity.csv")
 
+#Convert Date Factor to type date
+ActivityData$date <- as.Date(ActivityData$date)
+```
 
 ## What is mean total number of steps taken per day?
+```{r, echo=TRUE}
+DailySteps <- aggregate(steps ~ date, ActivityData, sum)
 
+#plot histogram of Total number of steps per day 
+hist(DailySteps$steps, 
+     length(DailySteps$date),
+     breaks = 20,
+     main="Frequency of Daily Steps",
+     xlab = "Daily Steps")
+
+#mean and medium values
+mean(DailySteps$steps)
+median(DailySteps$steps)
+```
 
 
 ## What is the average daily activity pattern?
+```{r, echo=TRUE}
+# Avg # of steps per increment, average across all the days
+IncrementAvg <- aggregate(steps ~ interval, ActivityData, mean)
+
+#Plot Time Series
+plot(IncrementAvg$interval, 
+     IncrementAvg$steps, 
+     type="l", 
+     main = "# of Steps taken per 5-Minute Interval avg across all days",
+     xlab = "5-minute Interval",
+     ylab = "# of Steps Taken"
+     )
+
+IncrementAvg[IncrementAvg$steps==max(IncrementAvg$steps),]$interval
+```
 
 
 
 ## Imputing missing values
+```{r, echo=TRUE}
+# Logical vector of missing values
+Missing = is.na(ActivityData$steps)
 
+# Number of missing values (na) for Steps
+sum(Missing)
+
+# Copy Orginal Data
+ActivityData2 <- ActivityData
+
+# Impute avg steps/increment for missing values
+ActivityData2$steps[Missing] <- 
+        sapply(ActivityData2$interval[Missing],
+               function(x) { IncrementAvg$steps[IncrementAvg$interval==x] }
+               )
+DailySteps2 <- aggregate(steps ~ date, ActivityData2, sum)
+
+hist(DailySteps2$steps, 
+     length(DailySteps2$date),
+     breaks = 20,
+     main="Frequency of Daily Steps",
+     xlab = "Daily Steps")
+
+mean(DailySteps2$steps)
+median(DailySteps2$steps)
+```
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
+```{r, echo=TRUE}
+# Generate array of weekdays
+wd <- weekdays(ActivityData2$date,TRUE)
+
+# Convert to array of factors ("weeday" or "weekend")
+weekend <- factor((wd=="Sun"| wd=="Sat"), labels=c("weekday","weekend") )
+
+# Add weeend array to data.frame
+ActivityData3 <- cbind(ActivityData2, weekend)
+
+# Avg # of steps per increment, average across all the days
+IncrementAvg2 <- aggregate(steps ~ interval + weekend, ActivityData3, mean)
+
+#Plot timeseries data in two panel plot, weekdays vs weekends
+g = ggplot(IncrementAvg2, aes(interval,steps)) + 
+        geom_line() + 
+        facet_wrap(~weekend, ncol = 1) + 
+        labs(x="number of steps",
+             y="Interval")
+g
+```
+
