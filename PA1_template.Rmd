@@ -31,6 +31,7 @@ hist(DailySteps$steps,
      main="Frequency of Daily Steps",
      xlab = "Daily Steps")
 ```
+
 The Mean and Median of daily steps taken
 ```{r, echo=TRUE}
 #mean and medium values
@@ -53,6 +54,7 @@ plot(IncrementAvg$interval,
      ylab = "# of Steps Taken"
      )
 ```
+
 The interval with the maxium number of average steps across all days:
 ```{r, echo=TRUE}
 IncrementAvg[IncrementAvg$steps==max(IncrementAvg$steps),]$interval
@@ -61,6 +63,7 @@ IncrementAvg[IncrementAvg$steps==max(IncrementAvg$steps),]$interval
 
 
 ## Imputing missing values
+
 The avg number of steps per interval over all days is used to impute the missing data.
 ```{r, echo=TRUE}
 # Logical vector of missing values
@@ -88,6 +91,7 @@ hist(DailySteps2$steps,
      main="Frequency of Daily Steps",
      xlab = "Daily Steps")
 ```
+
 The histogram has a similar shape as the original data, overall the frequencies are higher.
 
 The Mean and Medium of daily steps with imputed missing data.
@@ -120,4 +124,5 @@ g = ggplot(IncrementAvg2, aes(interval,steps)) +
              y="Interval")
 g
 ```
+
 The weekdays and weekend days have a similar shape.  The weekday steps start earlier in the day, the number of steps tends to be higher on weekends.

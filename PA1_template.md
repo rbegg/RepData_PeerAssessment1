@@ -29,6 +29,7 @@ hist(DailySteps$steps,
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-2-1.png)\
+
 The Mean and Median of daily steps taken
 
 ```r
@@ -60,6 +61,7 @@ plot(IncrementAvg$interval,
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-4-1.png)\
+
 The interval with the maxium number of average steps across all days:
 
 ```r
@@ -73,6 +75,7 @@ IncrementAvg[IncrementAvg$steps==max(IncrementAvg$steps),]$interval
 
 
 ## Imputing missing values
+
 The avg number of steps per interval over all days is used to impute the missing data.
 
 ```r
@@ -109,6 +112,7 @@ hist(DailySteps2$steps,
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-6-1.png)\
+
 The histogram has a similar shape as the original data, overall the frequencies are higher.
 
 The Mean and Medium of daily steps with imputed missing data.
@@ -150,4 +154,5 @@ g
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-8-1.png)\
+
 The weekdays and weekend days have a similar shape.  The weekday steps start earlier in the day, the number of steps tends to be higher on weekends.
